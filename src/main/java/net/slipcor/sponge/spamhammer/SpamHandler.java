@@ -91,9 +91,9 @@ public class SpamHandler {
                     unMutePlayer(Sponge.getServer().getConsole(), user);
                 }
             }
-            final long coolOff = Config.getInt(Config.COOLDOWN_SECONDS) * 1000;
+            final long coolOff = Config.getInt(Config.PUNISH_COOLDOWN_SECONDS) * 1000;
             if ((time > (action + coolOff))
-                    && (Config.getInt(Config.COOLDOWN_SECONDS) != 0)) {
+                    && (Config.getInt(Config.PUNISH_COOLDOWN_SECONDS) != 0)) {
                 if (beenKicked(user)) {
                     clearKickHistory(Sponge.getServer().getConsole(), user);
                 }
@@ -302,7 +302,7 @@ public class SpamHandler {
             isSpamming = hasDuplicateMessages(player);
         }
 
-        if (!isSpamming) {
+        if (Config.getBoolean(Config.CAPS_RESTRICT) && !isSpamming) {
             // nothing bad yet. But maybe there is a caps issue?
             if (Config.getInt(Config.CAPS_THRESHOLD) < message.length() &&
                     (Config.getInt(Config.CAPS_MAX_AMOUNT) > 0 || Config.getFloat(Config.CAPS_RATIO) > 0f)) {

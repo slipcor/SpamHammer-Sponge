@@ -14,58 +14,57 @@ import java.util.List;
 
 public enum Config {
 
-    //MESSAGE(Null.class, "settings.message",null,new String[]{"# === [ Message Spam Settings ] ==="}),
-    //MESSAGE_RATE(Null.class, "settings.message.rate",null,new String[]{
-    //    "# The message rate settings determine how many messages per time frame are allowed before they are considered spam.",
-    //            "# The default of limit: 3 and period: 1 means more than 3 messages per 1 second will be considered spam"}),
+    C_SPAM("spam", null, "=== [ Message Spam Settings ] ==="),
 
-    SPAM_RATE_LIMIT("spam_rate_limit", 3, ""),
-    SPAM_RATE_PERIOD("spam_rate_period", 1, ""),
+    C_CAPS("spam.caps", null, "The caps limiter setting allows for a maximum amount/ratio of caps per message"),
 
-    SPAM_RATE_QUICKMUTE("spam_rate_quickmute", true, "Prevents messages above the rate limit from displaying"),
+    CAPS_RESTRICT("spam.caps.restrict", true, ""),
 
-    //MESSAGE_REPEAT(Null.class, "settings.message.repeat",null,new String[]{"# The repeat settings allow you to prevent users from repeating the same message in a row"}),
+    CAPS_MAX_AMOUNT("spam.caps.maxamount", 0, "How many uppercase characters are allowed per message"),
+    CAPS_RATIO("spam.caps.ratio", 0f, "How many uppercase characters relatively to the length are allowed"),
+    CAPS_THRESHOLD("spam.caps.threshold", 5, "How many letters are required before checking"),
 
-    REPEAT_BLOCK("repeat_block", true, "If set to true, this will block repeat messages."),
-    REPEAT_LIMIT("repeat_limit", 2, "If SpamHammer is set to block repeat messages, this is how many messages before they are considered repeats."),
+    CHECK_IPS("spam.check_ips", false, "Check for IPs and punish when found"),
+    CHECK_URLS("spam.check_urls", false, "Check for URLs and punish when found"),
 
-    //CAPS(Null.class, "settings.message.caps", null, new String[]{"# The caps limiter setting allows for a maximum amount/ratio of caps per message"}),
+    C_SPAM_RATE("spam.rate", null, "The message rate settings determine how many messages per period are allowed before they are considered spam"),
 
-    CAPS_RESTRICT("caps_restrict", true, ""),
+    SPAM_RATE_LIMIT("spam.rate.limit", 3, "Amount of messages allowed"),
+    SPAM_RATE_PERIOD("spam.rate.period", 1, "Length of the check period in seconds"),
+    SPAM_RATE_PREVENT("spam.rate.prevent", true, "Prevents messages above the rate limit from displaying"),
 
-    CAPS_MAX_AMOUNT("caps_maxamount", 0, "How many uppercase characters are allowed per message?"),
-    CAPS_RATIO("caps_ratio", Float.valueOf(0), "How many uppercase characters relatively to the length are allowed?"),
-    CAPS_THRESHOLD("caps_threshold", 5, "How many letters are required before checking?"),
+    C_REPEAT("spam.repeat", null, "The repeat settings allow you to prevent users from repeating the same message in a row"),
 
-    COMMAND_SPAM_CHECKLIST("command_spam_checklist", Arrays.asList("g", "general", "yell"),"The commands listed here will be included in spam checking."),
-    COMMAND_FIRST_RUN("command_first_run", new ArrayList<>(), "Will make the plugin perform tasks only done on a first run (if any)."),
+    REPEAT_BLOCK("spam.repeat.block", true, "If set to true, this will block repeat messages"),
+    REPEAT_LIMIT("spam.repeat.limit", 2, "If SpamHammer is set to block repeat messages, this is how many messages before they are considered repeats"),
 
-    // # === [ Punishment Settings ] ===
+    SPAM_COMMAND_CHECKLIST("spam.spam_cmd_checklist", Arrays.asList("g", "general", "yell"),"The commands listed here will be included in spam checking"),
 
-    PUNISH_MUTE("punish_mute", true,"Setting this to true will mute players as the first level of punishment."),
-    PUNISH_MUTE_TIME("punish_mute_time", 30,"If mute punishment is used, this is how long (in seconds) the player will be muted for."),
-    PUNISH_MUTE_TYPE("punish_mute_type", "both","What should be muted? Possible values: chat, command, both"),
+    C_PUNISH("punish", null, "=== [ Punishment Settings ] ==="),
 
-    PUNISH_KICK("punish_kick", true,"Setting this to true will kick players as the second level of punishment."),
-    PUNISH_BAN("punish_ban", true,"Setting this to true will ban players as the final level of punishment."),
+    PUNISH_COOLDOWN_SECONDS("punish.cooldown", 300, "This setting determines how long (in seconds) a player will be watched for additional spam before downgrading them to the lowest punishment level"),
 
-    LANGUAGE_FILE("language_file", "lang_en.conf", "This is the language file you wish to use."),
-    COOLDOWN_SECONDS("cooldown", 300, "This setting determines how long (in seconds) a player will be watched for additional spam before downgrading them to the lowest punishment level."),
-    CALL_HOME("callhome", true, "This activates phoning home to www.slipcor.net"),
+    PUNISH_MUTE("punish.mute", true,"Setting this to true will mute players as the first level of punishment"),
+    PUNISH_MUTE_TIME("punish.mute_time", 30,"If mute punishment is used, this is how long (in seconds) the player will be muted for"),
+    PUNISH_MUTE_TYPE("punish.mute_type", "both","What should be muted? Possible values: chat, command, both"),
 
-    CHECK_IPS("checkips", false, "Check for IPs and punish when found"),
-    CHECK_URLS("checkurls", false, "Check for URLs and punish when found");
+    PUNISH_KICK("punish.kick", true,"Setting this to true will kick players as the second level of punishment"),
+    PUNISH_BAN("punish.ban", true,"Setting this to true will ban players as the final level of punishment"),
+
+    C_PLUGIN("plugin", null, "=== [ Plugin Settings ] ==="),
+
+    CALL_HOME("plugin.callhome", true, "This activates phoning home to www.slipcor.net"),
+    LANGUAGE_FILE("plugin.language_file", "lang_en.conf", "This is the language file you wish to use");
 
     String nodes;
     Object value;
     String comment;
 
-    Config(String nodes, Object value, String comment) {
+    Config(final String nodes, final Object value, final String comment) {
         this.nodes = nodes;
         this.value = value;
         this.comment = comment;
     }
-
 
     static ConfigurationLoader<CommentedConfigurationNode> loader = null;
     static CommentedConfigurationNode rootNode = null;
@@ -81,7 +80,9 @@ public enum Config {
                 changed = true;
                 node.setComment(c.comment);
             }
-            c.value = node.getValue(c.value);
+            if (c.value != null) {
+                c.value = node.getValue(c.value);
+            }
         }
         if (changed) {
             loader.save(rootNode);

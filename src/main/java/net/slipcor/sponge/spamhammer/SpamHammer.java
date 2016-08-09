@@ -5,10 +5,9 @@ import net.slipcor.sponge.spamhammer.cmds.*;
 import net.slipcor.sponge.spamhammer.utils.Config;
 import net.slipcor.sponge.spamhammer.utils.Language;
 import net.slipcor.sponge.spamhammer.utils.Perms;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import net.slipcor.sponge.spamhammer.utils.Tracker;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Plugin(id = "spamhammer", name = "SpamHammer", version = "4.0")
+@Plugin(id = "spamhammer", name = "SpamHammer", version = "4.0.1")
 public class SpamHammer {
     private Logger logger;
     @Inject
@@ -89,6 +88,7 @@ public class SpamHammer {
 
         // initiate main command
         new SpamMain(this, subCommands);
+        final Tracker trackMe = new Tracker(this);
     }
 
     @Listener
@@ -107,7 +107,7 @@ public class SpamHammer {
         }
 
         if (handler.handleChat(player, event.getRawMessage())
-                && Config.getBoolean(Config.SPAM_RATE_QUICKMUTE) && !player.hasPermission(Perms.BYPASS_REPEAT.toString())) {
+                && Config.getBoolean(Config.SPAM_RATE_PREVENT) && !player.hasPermission(Perms.BYPASS_REPEAT.toString())) {
             event.setCancelled(true);
             player.sendMessage(Language.BAD_SPAMMING_MESSAGE.red());
             return;
@@ -133,8 +133,6 @@ public class SpamHammer {
 
     @Listener
     public void onCommand(final SendCommandEvent event) {
-        Sponge.getServer().getConsole().sendMessage(Text.of(event.getCommand()));
-
         final Optional<Player> oPlayer = event.getCause().first(Player.class);
         if (!oPlayer.isPresent()) {
             return;
@@ -142,7 +140,7 @@ public class SpamHammer {
 
         final Player player = oPlayer.get();
 
-        final List<String> chatcmds = Config.getList(Config.COMMAND_SPAM_CHECKLIST);
+        final List<String> chatcmds = Config.getList(Config.SPAM_COMMAND_CHECKLIST);
         boolean chat = false;
         for (String entry : chatcmds) {
             if (event.getCommand().startsWith(entry)) {
@@ -151,8 +149,8 @@ public class SpamHammer {
             }
         }
 
-        if ((chat || !"chat".equals(Config.getString(Config.PUNISH_MUTE_TYPE))
-                && handler.isMuted(player) && player.hasPermission(Perms.BYPASS_MUTE.toString()))) {
+        if ((chat || !"chat".equals(Config.getString(Config.PUNISH_MUTE_TYPE)))
+                && handler.isMuted(player) && !player.hasPermission(Perms.BYPASS_MUTE.toString())) {
 
             // this in here is the punishment, so the opposite of what we allow
             event.setCancelled(true);
@@ -164,7 +162,7 @@ public class SpamHammer {
         }
 
         if (handler.handleChat(player, Text.of(event.getCommand() + " " + event.getArguments()))
-                && Config.getBoolean(Config.SPAM_RATE_QUICKMUTE) && !player.hasPermission(Perms.BYPASS_REPEAT.toString())) {
+                && Config.getBoolean(Config.SPAM_RATE_PREVENT) && !player.hasPermission(Perms.BYPASS_REPEAT.toString())) {
             event.setCancelled(true);
             player.sendMessage(Language.BAD_SPAMMING_MESSAGE.red());
         }
