@@ -1,0 +1,17 @@
+plugins {
+    id 'org.spongepowered.plugin' version '0.6'
+}
+
+group = 'net.slipcor.sponge.spamhammer'
+version = '4.0-SNAPSHOT'
+description = 'Hammer those spammers!'
+
+sponge {
+    plugin {
+        id = 'spamhammer'
+    }
+}
+
+dependencies {
+    compile 'org.spongepowered:spongeapi:5.0.0-SNAPSHOT'
+}
