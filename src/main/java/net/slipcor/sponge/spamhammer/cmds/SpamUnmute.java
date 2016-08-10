@@ -1,6 +1,7 @@
 package net.slipcor.sponge.spamhammer.cmds;
 
 import net.slipcor.sponge.spamhammer.SpamHammer;
+import net.slipcor.sponge.spamhammer.utils.Perms;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -14,7 +15,7 @@ import java.util.Optional;
 public class SpamUnmute extends SubCommand {
     final SpamHammer plugin;
     public SpamUnmute(final SpamHammer plugin) {
-        super(plugin, GenericArguments.user(Text.of("user")), "Unmutes a player muted by SpamHammer.", "spamunmute", "unmute", "u");
+        super(plugin, GenericArguments.user(Text.of("user")), Perms.CMD_UNMUTE, "Unmutes a player muted by SpamHammer.", "spamunmute", "unmute", "u");
         this.plugin = plugin;
     }
     @Override

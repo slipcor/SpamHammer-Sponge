@@ -1,10 +1,11 @@
 package net.slipcor.sponge.spamhammer.utils;
 
 public enum Perms {
-    BYPASS("spamhammer.bypass.*","Allows user to bypass ban punishments"),
+    BYPASS("spamhammer.bypass.all","Allows user to bypass everything"),
 
     BYPASS_REPEAT("spamhammer.bypass.repeat","Allows user to bypass repeat message limit."),
-    BYPASS_PUNISH_ALL("spamhammer.bypass.punish.all","Allows user to bypass ban punishments"),
+
+    BYPASS_PUNISH_ALL("spamhammer.bypass.punish.all","Allows user to bypass all punishments"), //TODO: implement
 
     BYPASS_MUTE("spamhammer.bypass.punish.mute","Allows user to bypass mute punishments"),
     BYPASS_KICK("spamhammer.bypass.punish.kick","Allows user to bypass kick punishments"),
@@ -12,7 +13,7 @@ public enum Perms {
     BYPASS_IPS("spamhammer.bypass.punish.ips","Allows user to bypass IP check punishments"),
     BYPASS_URLS("spamhammer.bypass.punish.urls","Allows user to bypass URL punishments"),
 
-    CMD_ALL("spamhammer.cmd.*", "Allows use of all commands"),
+    CMD_ALL("spamhammer.cmd.all", "Allows use of all commands"),
 
     CMD_UNMUTE("spamhammer.cmd.unmute","Allows use of unmute command"),
     CMD_RESET("spamhammer.cmd.reset","Allows use of reset command"),

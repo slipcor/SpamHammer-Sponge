@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Plugin(id = "spamhammer", name = "SpamHammer", version = "4.0.1")
+@Plugin(id = "spamhammer", name = "SpamHammer", version = "4.0.2")
 public class SpamHammer {
     private Logger logger;
     @Inject
@@ -99,6 +99,9 @@ public class SpamHammer {
         }
 
         final Player player = oPlayer.get();
+        if (player.hasPermission(Perms.BYPASS.toString())) {
+            return;
+        }
 
         if (!"command".equals(Config.getString(Config.PUNISH_MUTE_TYPE)) && handler.isMuted(player) && !player.hasPermission(Perms.BYPASS_MUTE.toString())) {
             event.setCancelled(true);
@@ -123,7 +126,7 @@ public class SpamHammer {
         }
 
         if (Config.getBoolean(Config.CHECK_URLS) && handler.handleChatURL(player, event.getRawMessage())
-                && !player.hasPermission(Perms.BYPASS_IPS.toString())) {
+                && !player.hasPermission(Perms.BYPASS_URLS.toString())) {
             Sponge.getServer().getConsole().sendMessage(
                     Language.INFO_CAUGHT_URL.yellow(player.getName() + ": " + event.getRawMessage()));
             event.setCancelled(true);
@@ -139,6 +142,9 @@ public class SpamHammer {
         }
 
         final Player player = oPlayer.get();
+        if (player.hasPermission(Perms.BYPASS.toString())) {
+            return;
+        }
 
         final List<String> chatcmds = Config.getList(Config.SPAM_COMMAND_CHECKLIST);
         boolean chat = false;

@@ -1,6 +1,7 @@
 package net.slipcor.sponge.spamhammer.cmds;
 
 import net.slipcor.sponge.spamhammer.SpamHammer;
+import net.slipcor.sponge.spamhammer.utils.Perms;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -14,7 +15,7 @@ import java.util.Optional;
 public class SpamReset extends SubCommand {
     final SpamHammer plugin;
     public SpamReset(final SpamHammer plugin) {
-        super(plugin, GenericArguments.user(Text.of("user")), "Resets a player's history with SpamHammer", "spamreset", "reset", "rs");
+        super(plugin, GenericArguments.user(Text.of("user")), Perms.CMD_RESET, "Resets a player's history with SpamHammer", "spamreset", "reset", "rs");
         this.plugin = plugin;
     }
     @Override
