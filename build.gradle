@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'net.slipcor.sponge.spamhammer'
-version = '4.0.1'
+version = '4.0.2'
 description = 'Hammer those spammers!'
 
 sponge {
